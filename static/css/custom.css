@@ -1,0 +1,149 @@
+/* Import Fonts for Bilingual Support */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+Khmer:wght@400;700&display=swap');
+
+/* Global */
+.stApp {
+    background: linear-gradient(to bottom, #f8fafc, #e0f2fe);
+    font-family: 'Noto Sans', 'Noto Sans Khmer', sans-serif !important;
+    color: #1e293b;
+}
+
+/* Hero Header (Kept beautiful) */
+.hero-header {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                url('https://media.istockphoto.com/id/1032930350/photo/view-of-angkor-wat-at-sunrise-archaeological-park-in-siem-reap-cambodia-unesco-world-heritage.jpg?s=612x612&w=0&k=20&c=-FuqiolxeleQ4uDUh8gk-yc4hkcGgOjV5foLNHiztn0=');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 2rem;
+    border-radius: 20px;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: white !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+/* Attraction Cards (Softer) */
+.attraction-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-left: 5px solid #2563eb;
+    transition: all 0.4s ease;
+}
+
+.attraction-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(37, 99, 235, 0.2);
+}
+
+/* Chat Bubbles (Modern) */
+.user-bubble {
+    background: #2563eb;
+    color: white;
+    border-radius: 20px 20px 0 20px;
+    padding: 1.2rem;
+    margin: 1rem 0 1rem auto;
+    max-width: 75%;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.ai-bubble {
+    background: #1e40af;
+    color: white;
+    border-radius: 20px 20px 20px 0;
+    padding: 1.2rem;
+    margin: 1rem 0;
+    max-width: 75%;
+    box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+}
+
+/* Headings & Buttons */
+h1, h2, h3 {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.stButton > button {
+    background: linear-gradient(to right, #2563eb, #3b82f6);
+    color: white !important;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s;
+}
+
+.stButton > button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+}
+
+/* NEW PREMIUM BLACK + GOLD SIDEBAR (Luxury Dark Mode) */
+[data-testid="stSidebar"] {
+    background: #0f172a !important; /* Deep black */
+    border-right: 1px solid #1e293b;
+    padding-top: 2rem;
+}
+
+[data-testid="stSidebar"] .css-1d391kg {
+    background: transparent !important;
+}
+
+/* Sidebar Header Text */
+[data-testid="stSidebar"] h2 {
+    color: #fbbf24 !important; /* Gold */
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+[data-testid="stSidebar"] p {
+    color: #fcd34d; /* Light gold */
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Navigation Items */
+[data-testid="stSidebar"] [role="radiogroup"] label {
+    padding: 1rem 1.5rem;
+    margin: 0.5rem 1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    color: #e2e8f0; /* Light gray text */
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+[data-testid="stSidebar"] [role="radiogroup"] label:hover {
+    background: rgba(251, 191, 36, 0.15) !important; /* Gold hover */
+    color: #fbbf24 !important;
+}
+
+/* Active Item (Gold Highlight) */
+[data-testid="stSidebar"] [role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+    background: linear-gradient(to right, #fbbf24, #f59e0b) !important; /* Gold gradient */
+    color: #0f172a !important; /* Black text on gold */
+    font-weight: bold;
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+}
+
+/* Icons in Navigation */
+[data-testid="stSidebar"] [role="radiogroup"] label span {
+    font-size: 1.3rem;
+    margin-right: 0.8rem;
+}
+
+/* HR Line */
+[data-testid="stSidebar"] hr {
+    border-color: #1e293b !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-header {
+        padding: 4rem 1rem;
+    }
+}
