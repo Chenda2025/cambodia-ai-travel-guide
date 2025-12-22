@@ -1,5 +1,6 @@
 import streamlit as st
 from core.translations import languages
+import requests
 
 # Load Custom CSS
 with open("static/css/custom.css", "r", encoding="utf-8") as css_file:
@@ -12,7 +13,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Hero Header with beautiful Angkor Wat sunrise
+# Hero Header
 st.markdown("""
 <div class="hero-header">
     <h1 style="font-size:4.5rem; margin:0;">🇰🇭 Cambodia AI Travel Guide</h1>
@@ -29,7 +30,7 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Language Selector in Sidebar
+# Language Selector
 st.sidebar.markdown("### 🌐 Language / ភាសា")
 selected_lang_name = st.sidebar.selectbox(
     "Select Language",
@@ -39,7 +40,7 @@ selected_lang_name = st.sidebar.selectbox(
 )
 lang = languages[selected_lang_name]
 
-# Navigation with Icons
+# Navigation
 st.sidebar.markdown("### 📍 " + lang["navigation"])
 
 pages = [
@@ -73,9 +74,9 @@ if page == lang["home"]:
     st.markdown(f"<h2 style='text-align:center;'>{lang['discover']}</h2>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.image("static/images/koh_rong.jpg", caption="Koh Rong Paradise" if selected_lang_name == "English" else "កោះរ៉ុងសួគ៌", use_column_width=True)
+        st.image("static/images/koh_rong.jpg", caption="Koh Rong Paradise" if selected_lang_name == "English" else "កោះរ៉ុងសួគ៌", width=None)
     with col2:
-        st.image("static/images/amok.jpg", caption="Delicious Fish Amok" if selected_lang_name == "English" else "អាម៉ុកត្រីឆ្ងាញ់", use_column_width=True)
+        st.image("static/images/amok.jpg", caption="Delicious Fish Amok" if selected_lang_name == "English" else "អាម៉ុកត្រីឆ្ងាញ់", width=None)
     st.info(lang["welcome"])
 
 elif page == lang["attractions"]:
@@ -88,7 +89,7 @@ elif page == lang["attractions"]:
     ]
     
     for name, desc, img_path, location in attractions:
-        st.image(img_path, use_column_width=True)
+        st.image(img_path, width=None)
         st.markdown(f"<h3 style='text-align:center; color:#d35400;'>{name} — {location}</h3>", unsafe_allow_html=True)
         st.write(desc)
         st.divider()
@@ -122,7 +123,7 @@ elif page == lang["ai"]:
         else:
             st.markdown(f'<div class="ai-bubble">{message["content"]}</div>', unsafe_allow_html=True)
 
-    # User input (fixed warning)
+    # User input
     user_input = st.text_input(
         "Your question",
         placeholder=lang["input_placeholder"],
@@ -135,19 +136,55 @@ elif page == lang["ai"]:
             # Add user message
             st.session_state.messages.append({"role": "user", "content": user_input})
 
-            # Simple AI response logic
-            q = user_input.lower()
-            if any(word in q for word in ["plan", "itinerary", "day", "ថ្ងៃ", "ដំណើរ"]):
-                response = f"{lang['sample_itinerary']}\n\n{lang['itinerary_text']}"
-            elif any(word in q for word in ["beach", "ឆ្នេរ"]):
-                response = lang["best_beaches"]
-            elif any(word in q for word in ["vegetarian", "veg", "បួស"]):
-                response = lang["vegetarian"]
-            else:
-                response = lang["learning"]
+            # ====== REAL GROK AI INTEGRATION ======
+            API_KEY = "YOUR_GROK_API_KEY_HERE"  # ← REPLACE with your key from https://x.ai/api
+
+            url = "https://api.x.ai/v1/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json"
+            }
+
+            # Expert Cambodia travel system prompt
+            system_prompt = """
+            You are an expert Cambodia travel guide. 
+            Answer in the same language as the user (English or Khmer).
+            Be friendly, helpful, detailed, and use emojis.
+            Cover attractions, food, transport, visa, budget, safety, culture.
+            Make personalized recommendations.
+            """
+
+            messages = [
+                {"role": "system", "content": system_prompt}
+            ]
+
+            # Add chat history
+            for msg in st.session_state.messages[:-1]:
+                messages.append({"role": msg["role"], "content": msg["content"]})
+
+            # Add current user message
+            messages.append({"role": "user", "content": user_input})
+
+            data = {
+                "model": "grok-beta",
+                "messages": messages,
+                "temperature": 0.8,
+                "max_tokens": 1000
+            }
+
+            with st.spinner("Grok is thinking... 🤖"):
+                try:
+                    response = requests.post(url, headers=headers, json=data, timeout=30)
+                    if response.status_code == 200:
+                        result = response.json()
+                        ai_response = result["choices"][0]["message"]["content"]
+                    else:
+                        ai_response = f"API error {response.status_code}: {response.text}"
+                except Exception as e:
+                    ai_response = f"Connection error: {str(e)}. Check internet or API key."
 
             # Add AI response
-            st.session_state.messages.append({"role": "ai", "content": response})
+            st.session_state.messages.append({"role": "ai", "content": ai_response})
             st.rerun()
 
 # Footer
