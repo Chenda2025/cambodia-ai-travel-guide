@@ -112,18 +112,15 @@ elif page == lang["ai"]:
     st.markdown(f"<h2 style='text-align:center;'>{lang['ask_ai']}</h2>", unsafe_allow_html=True)
     st.write(lang["ask_prompt"])
 
-    # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Display chat messages
     for message in st.session_state.messages:
         if message["role"] == "user":
             st.markdown(f'<div class="user-bubble">{message["content"]}</div>', unsafe_allow_html=True)
         else:
             st.markdown(f'<div class="ai-bubble">{message["content"]}</div>', unsafe_allow_html=True)
 
-    # User input
     user_input = st.text_input(
         "Your question",
         placeholder=lang["input_placeholder"],
@@ -133,57 +130,50 @@ elif page == lang["ai"]:
 
     if st.button(lang["get_answer"]):
         if user_input.strip():
-            # Add user message
             st.session_state.messages.append({"role": "user", "content": user_input})
 
-            # ====== REAL GROK AI INTEGRATION ======
-            API_KEY = st.secrets["xai-JvPxsXbs1dwAhak70YdPPqUpyd6ImmMjNFT8DA4tUXxwS81SZdYeYbZxHYVkrTsiRshcXOr9jDh55h5d"]  
+            # REAL OPENAI AI (FREE CREDIT)
+            API_KEY = st.secrets["OPENAI_API_KEY"]
 
-            url = "https://api.x.ai/v1/chat/completions"
+            url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
             }
 
-            # Expert Cambodia travel system prompt
             system_prompt = """
-            You are an expert Cambodia travel guide. 
+            You are an expert Cambodia travel guide.
             Answer in the same language as the user (English or Khmer).
             Be friendly, helpful, detailed, and use emojis.
             Cover attractions, food, transport, visa, budget, safety, culture.
             Make personalized recommendations.
             """
 
-            messages = [
-                {"role": "system", "content": system_prompt}
-            ]
+            messages = [{"role": "system", "content": system_prompt}]
 
-            # Add chat history
             for msg in st.session_state.messages[:-1]:
                 messages.append({"role": msg["role"], "content": msg["content"]})
 
-            # Add current user message
             messages.append({"role": "user", "content": user_input})
 
             data = {
-                "model": "grok-beta",
+                "model": "gpt-3.5-turbo",
                 "messages": messages,
                 "temperature": 0.8,
                 "max_tokens": 1000
             }
 
-            with st.spinner("Grok is thinking... 🤖"):
+            with st.spinner("Thinking... 🤖"):
                 try:
                     response = requests.post(url, headers=headers, json=data, timeout=30)
                     if response.status_code == 200:
                         result = response.json()
                         ai_response = result["choices"][0]["message"]["content"]
                     else:
-                        ai_response = f"API error {response.status_code}: {response.text}"
+                        ai_response = f"Error {response.status_code}. Check key or internet."
                 except Exception as e:
-                    ai_response = f"Connection error: {str(e)}. Check internet or API key."
+                    ai_response = f"Connection error: {str(e)}"
 
-            # Add AI response
             st.session_state.messages.append({"role": "assistant", "content": ai_response})
             st.rerun()
 
