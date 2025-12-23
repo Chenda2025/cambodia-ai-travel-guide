@@ -74,9 +74,9 @@ if page == lang["home"]:
     st.markdown(f"<h2 style='text-align:center;'>{lang['discover']}</h2>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.image("static/images/koh_rong.jpg", caption="Koh Rong Paradise" if selected_lang_name == "English" else "កោះរ៉ុងសួគ៌", width=None)
+        st.image("static/images/koh_rong.jpg", caption="Koh Rong Paradise" if selected_lang_name == "English" else "កោះរ៉ុងសួគ៌", width='stretch')
     with col2:
-        st.image("static/images/amok.jpg", caption="Delicious Fish Amok" if selected_lang_name == "English" else "អាម៉ុកត្រីឆ្ងាញ់", width=None)
+        st.image("static/images/amok.jpg", caption="Delicious Fish Amok" if selected_lang_name == "English" else "អាម៉ុកត្រីឆ្ងាញ់", width='stretch')
     st.info(lang["welcome"])
 
 elif page == lang["attractions"]:
@@ -89,7 +89,7 @@ elif page == lang["attractions"]:
     ]
     
     for name, desc, img_path, location in attractions:
-        st.image(img_path, width=None)
+        st.image(img_path, width='stretch')
         st.markdown(f"<h3 style='text-align:center; color:#d35400;'>{name} — {location}</h3>", unsafe_allow_html=True)
         st.write(desc)
         st.divider()
@@ -137,7 +137,7 @@ elif page == lang["ai"]:
             st.session_state.messages.append({"role": "user", "content": user_input})
 
             # ====== REAL GROK AI INTEGRATION ======
-            API_KEY = "YOUR_GROK_API_KEY_HERE"  # ← REPLACE with your key from https://x.ai/api
+            API_KEY = st.secrets["xai-JvPxsXbs1dwAhak70YdPPqUpyd6ImmMjNFT8DA4tUXxwS81SZdYeYbZxHYVkrTsiRshcXOr9jDh55h5d"]  
 
             url = "https://api.x.ai/v1/chat/completions"
             headers = {
@@ -184,7 +184,7 @@ elif page == lang["ai"]:
                     ai_response = f"Connection error: {str(e)}. Check internet or API key."
 
             # Add AI response
-            st.session_state.messages.append({"role": "ai", "content": ai_response})
+            st.session_state.messages.append({"role": "assistant", "content": ai_response})
             st.rerun()
 
 # Footer
