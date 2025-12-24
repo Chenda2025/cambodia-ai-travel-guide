@@ -133,7 +133,7 @@ elif page == lang["ai"]:
             st.session_state.messages.append({"role": "user", "content": user_input})
 
             # REAL OPENAI AI (FREE CREDIT)
-            API_KEY = st.secrets["OPENAI_API_KEY"]
+            API_KEY = "OPENAI_API_KEY"
 
             url = "https://api.openai.com/v1/chat/completions"
             headers = {
