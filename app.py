@@ -1,6 +1,6 @@
 import streamlit as st
 from core.translations import languages
-import requests
+import requests  # ← Good, needed for API
 
 # Load Custom CSS
 with open("static/css/custom.css", "r", encoding="utf-8") as css_file:
@@ -101,11 +101,11 @@ elif page == lang["food"]:
 elif page == lang["tips"]:
     st.markdown(f"<h2 style='text-align:center;'>{lang['essential_tips']}</h2>", unsafe_allow_html=True)
     st.markdown("""
-    - **Best time to visit**: November – February (cool & dry)  
-    - **Visa**: e-Visa online ($36) or visa on arrival  
-    - **Currency**: US Dollars widely accepted  
-    - **Transport**: Tuk-tuk, Grab, PassApp  
-    - **Temples**: Cover shoulders and knees  
+    - **Best time to visit**: November – February (cool & dry)
+    - **Visa**: e-Visa online ($36) or visa on arrival
+    - **Currency**: US Dollars widely accepted
+    - **Transport**: Tuk-tuk, Grab, PassApp
+    - **Temples**: Cover shoulders and knees
     """)
 
 elif page == lang["ai"]:
@@ -138,15 +138,15 @@ elif page == lang["ai"]:
 
             import time
             current_time = time.time()
-            if current_time - st.session_state.last_request_time < 3:
-                st.warning("Please wait 3 seconds 😊")
+            if current_time - st.session_state.last_request_time < 5:
+                st.warning("Please wait 5 seconds between questions 😊")
                 st.stop()
             st.session_state.last_request_time = current_time
 
-            # REAL GROQ AI (FREE TIER)
-            API_KEY = st.secrets["GROQ_API_KEY"]
+            # REAL OPENAI AI
+            API_KEY = st.secrets["OPENAI_API_KEY"]
 
-            url = "https://api.groq.com/openai/v1/chat/completions"
+            url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
@@ -168,7 +168,7 @@ elif page == lang["ai"]:
             messages.append({"role": "user", "content": user_input})
 
             data = {
-                "model": "llama-3.1-70b-versatile",  # Fast, smart, free tier
+                "model": "gpt-4o-mini",
                 "messages": messages,
                 "temperature": 0.8,
                 "max_tokens": 1000
@@ -181,7 +181,7 @@ elif page == lang["ai"]:
                         result = response.json()
                         ai_response = result["choices"][0]["message"]["content"]
                     else:
-                        ai_response = f"Error {response.status_code}. Check key."
+                        ai_response = f"Error {response.status_code}. Check key or internet."
                 except Exception as e:
                     ai_response = f"Connection error: {str(e)}"
 
