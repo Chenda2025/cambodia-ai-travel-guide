@@ -132,10 +132,21 @@ elif page == lang["ai"]:
         if user_input.strip():
             st.session_state.messages.append({"role": "user", "content": user_input})
 
-            # REAL OPENAI AI (FREE CREDIT)
-            API_KEY = "OPENAI_API_KEY"
+            # Rate limit protection
+            if "last_request_time" not in st.session_state:
+                st.session_state.last_request_time = 0
 
-            url = "https://api.openai.com/v1/chat/completions"
+            import time
+            current_time = time.time()
+            if current_time - st.session_state.last_request_time < 3:
+                st.warning("Please wait 3 seconds 😊")
+                st.stop()
+            st.session_state.last_request_time = current_time
+
+            # REAL GROQ AI (FREE TIER)
+            API_KEY = st.secrets["GROQ_API_KEY"]
+
+            url = "https://api.groq.com/openai/v1/chat/completions"
             headers = {
                 "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
@@ -157,7 +168,7 @@ elif page == lang["ai"]:
             messages.append({"role": "user", "content": user_input})
 
             data = {
-                "model": "gpt-3.5-turbo",
+                "model": "llama-3.1-70b-versatile",  # Fast, smart, free tier
                 "messages": messages,
                 "temperature": 0.8,
                 "max_tokens": 1000
@@ -170,7 +181,7 @@ elif page == lang["ai"]:
                         result = response.json()
                         ai_response = result["choices"][0]["message"]["content"]
                     else:
-                        ai_response = f"Error {response.status_code}. Check key or internet."
+                        ai_response = f"Error {response.status_code}. Check key."
                 except Exception as e:
                     ai_response = f"Connection error: {str(e)}"
 
